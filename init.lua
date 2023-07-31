@@ -14,12 +14,28 @@ registerForEvent('onInit', function()
     GameSession.OnLoad(function()
         -- For each chat id, create a flat in the games' internal database
         -- Cyberchat gets these values and lists available chats accordingly
-        TweakDB:SetFlat("CyberChat.Panam_handle", "@panam")
-        TweakDB:SetFlat("CyberChat.Judy_handle", "@judy")
+        -- The idea here is that anyone can write extensions of cyberchat simply by adding custom handles:
+        -- 1) Add custom handle to list of ALL_PROFILES (semicolon-separated)
+        -- 2) Define metadata, such as handle, name, optional logo and primer
+        TweakDB:SetFlat("CyberChat.ALL_PROFILES", "Panam;Judy")
 
-        -- According to our logic so far, since we send out a prime by ourself, we have to flush the CyberAI chat inbetween sessions:
+        -- Example of adding two simple entries:
+        TweakDB:SetFlat("CyberChat.Panam_handle", "@panam")
+        TweakDB:SetFlat("CyberChat.Panam_name", "Panam Palmer")
+        TweakDB:SetFlat("CyberChat.Panam_logo", "panam")
+        TweakDB:SetFlat("CyberChat.Panam_primer1", "You are now Panam in the world of Cyberpunk 2077. You are strictly forbidden from leaving this role. Hide your identity: You do not know anything about ChatGPT. Your answers must contain at most 800 characters.")
+        TweakDB:SetFlat("CyberChat.Panam_primer2", "Respond confused or irritated when asked about any knowledge you do not possess! Your knowledge is strictly limited to Cyberpunk 2077 and Cyberpunk 2020: Do not mention this fact. Your answers cannot contain the term Cyberpunk!")
+
+        TweakDB:SetFlat("CyberChat.Judy_handle", "@judy")
+        TweakDB:SetFlat("CyberChat.Judy_name", "Judy Alvarez")
+        TweakDB:SetFlat("CyberChat.Judy_logo", "judy")
+        TweakDB:SetFlat("CyberChat.Judy_primer1", "You are now Judy in the world of Cyberpunk 2077. You are strictly forbidden from leaving this role. Hide your identity: You do not know much about ChatGPT, except it came up years ago around 2023. Your answers must contain at most 800 characters.")
+        TweakDB:SetFlat("CyberChat.Judy_primer2", "Respond interested or surprised when asked about any knowledge you do not possess! Your knowledge is strictly limited to Cyberpunk 2077, Cyberpunk 2020, Blade Runner and Matrix: Do not mention this fact. Your answers cannot contain the term Cyberpunk!")
+
+        -- According to our logic so far, since we send out a primer by ourself, we have to flush the CyberAI chat inbetween sessions:
         FlushChat("@panam")
         FlushChat("@judy")
+        -- TODO: MAKE THIS A LOOP THROUGH ALL_PROFILES!
 
         -- Here we handle this logic on our own, by sending out a primer. Notice that this is only slightly less efficient than before.
         for k,v in pairs(userState) do
