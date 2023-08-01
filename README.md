@@ -11,7 +11,12 @@ This is a requirement for [cyberchat2077](https://github.com/eeev/cyberchat2077)
 - [x] Multiple chats backend
     - Mirrors CyberAI's k/v store for chat conversations
     - Each chat is persisted individually
+- [x] Enable custom chat creation
+    - Define your own conversation partners & associated primers
 - [ ] In-game conversation fact tracker
+    - Limit or extend chat partner knowledge based on game progress
+- [ ] Message notification agent
+    - Display UI notification on new message
 
 ## Installation
 
