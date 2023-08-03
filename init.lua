@@ -17,8 +17,10 @@ registerForEvent('onInit', function()
         -- For each chat id, create a flat in the games' internal database
         -- Cyberchat gets these values and lists available chats accordingly
         -- The idea here is that anyone can write extensions of cyberchat simply by adding custom handles:
-        -- 1) Add custom handle to list of ALL_PROFILES (semicolon-separated)
+        -- 1) Add custom handle to list of ALL_PROFILES (semicolon-separated) & in the chatState table above
+        --      IT NEEDS TO BE LOWER CAPS IN THE TABLE & STARTING UPPERCASE IN THE PROFILE LIST
         -- 2) Define metadata, such as handle, name, optional logo and primer
+        --      THE FLATS WILL BE MATCHED TO THE PROFILE BY THEIR TEMPLATE NAME (e.g., "CyberChat.<Profile>_handle")
         TweakDB:SetFlat("CyberChat.ALL_PROFILES", "Panam;Judy;Johnny;Rogue")
 
         -- Example of adding simple entries:
@@ -46,16 +48,15 @@ registerForEvent('onInit', function()
         TweakDB:SetFlat("CyberChat.Rogue_primer1", "You are now Rogue Amendiares in the world of Cyberpunk 2077: Mirror her personality. You are strictly forbidden from leaving this role. Hide your true identity: You do not know anything about ChatGPT except it is some AI stuff. Your answers must contain at most 800 characters.")
         TweakDB:SetFlat("CyberChat.Rogue_primer2", "Respond with skepticism or disinterest when asked about any knowledge you do not possess! Your knowledge is strictly limited to Cyberpunk 2077 and Cyberpunk 2020: Do not mention this fact. Your answers cannot contain the term Cyberpunk!")
 
-
-        -- According to our logic so far, since we send out a primer by ourself, we have to flush the CyberAI chat inbetween sessions:
-        FlushChat("@panam")
-        FlushChat("@judy")
-        FlushChat("@johnny")
-        FlushChat("@rogue")
-
         -- Here we handle this logic on our own, by sending out a primer. Notice that this is only slightly less efficient than before.
+        -- i.e., any persistent chat history needs to be sent to OpenAI on session anyways! This only adds one message per chat overhead
+        -- which means only if you have a ton of open chats this will make a difference. However, the number of story characters is severly limited.
         for k,v in pairs(chatState) do
-            --print('for ' .. k .. ' length: ' .. #v)
+            -- Since we send out a primer on our own, we have to flush the chat inbetween sessions (else CyberAI would keep it).
+            -- this also makes sense since chats between sessions could not incorporate session facts..
+            print('[CyberChat-ext] Flushing remains of existing chats..')
+            FlushChat("@" .. k)
+
             if #v < 2 then
                 -- If there is no chatHistory for this key in this session
                 print('[CyberChat-ext] There is no chat history for ' .. k .. ', wait for user initiation..')
@@ -85,10 +86,9 @@ registerForEvent('onInit', function()
         -- At this time, we need to manually list possible handles to be persisted.
         -- This could be made so arbitrary handles are supported in the future. But would that make sense? For open-world NPCs maybe
         -- However, there are really not that many story-relevant NPCs in Cyberpunk2077
-        chatState.panam = GetHistory("@panam")
-        chatState.judy = GetHistory("@judy")
-        chatState.johnny = GetHistory("@johnny")
-        chatState.rogue = GetHistory("@rogue")
+        for k,v in pairs(chatState) do
+            chatState[k] = GetHistory("@" .. k)
+        end
         -- print(('[CyberChat-ext] [%s] Every %.2f secs: Chat(s) saved.'):format(os.date('%H:%M:%S'), timer.interval))
     end)
 end)
