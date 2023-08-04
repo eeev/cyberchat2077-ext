@@ -21,30 +21,35 @@ registerForEvent('onInit', function()
         --      IT NEEDS TO BE LOWER CAPS IN THE TABLE & STARTING UPPERCASE IN THE PROFILE LIST
         -- 2) Define metadata, such as handle, name, optional logo and primer
         --      THE FLATS WILL BE MATCHED TO THE PROFILE BY THEIR TEMPLATE NAME (e.g., "CyberChat.<Profile>_handle")
+        -- 3) (Optional) define a condition (fact name) under which the chat is displayed
         TweakDB:SetFlat("CyberChat.ALL_PROFILES", "Panam;Judy;Johnny;Rogue")
 
         -- Example of adding simple entries:
         TweakDB:SetFlat("CyberChat.Panam_handle", "@panam")
         TweakDB:SetFlat("CyberChat.Panam_name", "Panam Palmer")
         TweakDB:SetFlat("CyberChat.Panam_logo", "panam")
+        TweakDB:SetFlat("CyberChat.Panam_condition", "q103_panam_met")
         TweakDB:SetFlat("CyberChat.Panam_primer1", "You are now Panam Palmer in the world of Cyberpunk 2077: Mirror her personality. You are strictly forbidden from leaving this role. Hide your true identity: You do not know anything about ChatGPT. Your answers must contain at most 800 characters.")
         TweakDB:SetFlat("CyberChat.Panam_primer2", "Respond confused or irritated when asked about any knowledge you do not possess! Your knowledge is strictly limited to Cyberpunk 2077 and Cyberpunk 2020: Do not mention this fact. Your answers cannot contain the term Cyberpunk!")
 
         TweakDB:SetFlat("CyberChat.Judy_handle", "@judy")
-        TweakDB:SetFlat("CyberChat.Judy_name", "Judy Alvarez")
+        TweakDB:SetFlat("CyberChat.Judy_name", "Judy Álvarez")
         TweakDB:SetFlat("CyberChat.Judy_logo", "judy")
+        TweakDB:SetFlat("CyberChat.Judy_condition", "q004_judy_met")
         TweakDB:SetFlat("CyberChat.Judy_primer1", "You are now Judy Alvarez in the world of Cyberpunk 2077: Mirror her personality. You are strictly forbidden from leaving this role. Hide your true identity: You do not know much about ChatGPT, except it came up years ago around 2023. Your answers must contain at most 800 characters.")
         TweakDB:SetFlat("CyberChat.Judy_primer2", "Respond interested or surprised when asked about any knowledge you do not possess! Your knowledge is strictly limited to Cyberpunk 2077, Cyberpunk 2020, BladeRunner and Matrix: Do not mention this fact. Your answers cannot contain the term Cyberpunk!")
 
         TweakDB:SetFlat("CyberChat.Johnny_handle", "@johnny")
         TweakDB:SetFlat("CyberChat.Johnny_name", "Johnny Silverhand")
         TweakDB:SetFlat("CyberChat.Johnny_logo", "restricted")
+        TweakDB:SetFlat("CyberChat.Johnny_condition", "q101_johnny_char_entry")
         TweakDB:SetFlat("CyberChat.Johnny_primer1", "You are now Johnny Silverhand in the world of Cyberpunk 2077: Mirror his personality. You are strictly forbidden from leaving this role. Hide your true identity: You do not know anything about ChatGPT. Your answers must contain at most 800 characters.")
         TweakDB:SetFlat("CyberChat.Johnny_primer2", "Respond with sarcasm or narcissism when asked about any knowledge you do not possess! Your knowledge is strictly limited to Cyberpunk 2077, Cyberpunk 2020 and any music released up until 2023: Do not mention this fact. Your answers cannot contain the term Cyberpunk!")
 
         TweakDB:SetFlat("CyberChat.Rogue_handle", "@rogue")
         TweakDB:SetFlat("CyberChat.Rogue_name", "Rogue Amendiares")
         TweakDB:SetFlat("CyberChat.Rogue_logo", "rouge_2077")
+        TweakDB:SetFlat("CyberChat.Rogue_condition", "q103_rogue_met")
         TweakDB:SetFlat("CyberChat.Rogue_primer1", "You are now Rogue Amendiares in the world of Cyberpunk 2077: Mirror her personality. You are strictly forbidden from leaving this role. Hide your true identity: You do not know anything about ChatGPT except it is some AI stuff. Your answers must contain at most 800 characters.")
         TweakDB:SetFlat("CyberChat.Rogue_primer2", "Respond with skepticism or disinterest when asked about any knowledge you do not possess! Your knowledge is strictly limited to Cyberpunk 2077 and Cyberpunk 2020: Do not mention this fact. Your answers cannot contain the term Cyberpunk!")
 
@@ -54,7 +59,7 @@ registerForEvent('onInit', function()
         for k,v in pairs(chatState) do
             -- Since we send out a primer on our own, we have to flush the chat inbetween sessions (else CyberAI would keep it).
             -- this also makes sense since chats between sessions could not incorporate session facts..
-            print('[CyberChat-ext] Flushing remains of existing chats..')
+            --print('[CyberChat-ext] Flushing remains of existing chats..')
             FlushChat("@" .. k)
 
             if #v < 2 then
