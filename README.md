@@ -11,12 +11,11 @@ This is a requirement for [cyberchat2077](https://github.com/eeev/cyberchat2077)
 - [x] Multiple chats backend
     - Mirrors CyberAI's k/v store for chat conversations
     - Each chat is persisted individually
-- [x] Enable custom chat creation
+- [x] Custom chat profile creation backend
     - Define your own conversation partners & associated primers
-- [ ] In-game conversation fact tracker
-    - Limit or extend chat partner knowledge based on game progress
-- [ ] Message notification agent
-    - Display UI notification on new message
+    - [cyberchat2077](https://github.com/eeev/cyberchat2077) is initialized with these values
+- [x] Add conditions to display chat profiles
+    - Chats are only be displayed when their condition (`fact`) is met
 
 ## Installation
 
@@ -28,7 +27,8 @@ This is a requirement for [cyberchat2077](https://github.com/eeev/cyberchat2077)
 
 You may configure this extension by writing your own code inside `init.lua`. Currently, all existing chat character profiles are listed there, you can add your own ones by following the pattern denoted in the code comments:
 1) Add your new chat partner's first name to the `CyberChat.ALL_PROFILES` flat (this is a semicolon-separated list)
-2) Copy the existing pattern of creating the other 5 flats: `handle`, `name`, `logo`, `primer1` and `primer2`
+2) Add your new chat partner's handle (without the '@' prefix) to the `chatState` table
+3) Copy the existing pattern of creating the other 5 flats: `handle`, `name`, `logo`, `primer1` and `primer2`
     - All of the inputs are `Strings`
     - The `logo` is the texture part from the atlas resource that your [cyberchat2077 configuration](https://github.com/eeev/cyberchat2077#configuration) points to
     - `primer1` and `primer2` essentially tell the language model who they are role-playing as ([examples here](https://github.com/eeev/cyberchat2077#configuration))
